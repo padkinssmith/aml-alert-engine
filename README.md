@@ -51,50 +51,75 @@ and tracks that alert through the full investigation process — from
 the first flag all the way through to the final decision.
 
 Each pattern below is a real detection method built into this system.
-The screenshot listed next to each one is actual output from running it.
+The screenshot below each one is actual output from running it.
+
+---
 
 **A customer whose deposits suddenly spike far above their own history**
+
 The system calculates a z-score comparing this month's deposits to the
 prior 12-month average. A score above 3.0 triggers a HIGH ALERT.
-See: `02_velocity_zscore_detection.png` — McAllister z-score 316.97, HIGH ALERT.
+
+![Velocity z-score detection showing McAllister z-score 316.97 HIGH ALERT](screenshots/02_velocity_zscore_detection.png)
+
+---
 
 **A business depositing far more than any similar business in the area**
+
 The system compares each account to all other accounts of the same
 business type. A flower shop is compared to flower shops, not
 restaurants. This catches accounts that are always high, not just
 accounts that spike.
-See: `01_combined_alert_dashboard.png` — peer_z column shows each account's position
-relative to its business type group.
+
+![Combined alert dashboard showing peer group comparison across all 12 accounts](screenshots/01_combined_alert_dashboard.png)
+
+---
 
 **Deposits made just under the $10,000 reporting limit, month after month**
+
 The system counts deposits in the $8,000 to $9,999 zone. Three or more
 in a single month is a HIGH ALERT. The same pattern is also checked
 within any rolling 7-day window to catch aggressive structuring.
-See: `03_structuring_detection.png` — McAllister 4 deposits in zone, HIGH ALERT.
+
+![Structuring detection showing McAllister 4 deposits in zone HIGH ALERT](screenshots/03_structuring_detection.png)
+
+---
 
 **The same account using different bank branches to make deposits**
+
 The system counts how many distinct branches an account used in a single
-month. Using two or more is a documented structuring method.
-See: `04_multi_branch_detection.png` — McAllister used Airport Road Branch, Main
-Street Branch, and Riverside Branch all in the same month.
+month. Using two or more branches is a documented structuring method.
+
+![Multi-branch detection showing McAllister used 3 branches in one month totaling $38,950](screenshots/04_multi_branch_detection.png)
+
+---
 
 **Cash deposited then quickly withdrawn a few days later**
+
 The system finds any deposit of $5,000 or more followed by a withdrawal
 of at least 50% of that amount within 5 days. This is a layering pattern.
-See: `05_withdrawal_after_deposit.png` — three McAllister instances flagged, including
-$9,800 deposited and $8,500 withdrawn two days later.
+
+![Withdrawal after deposit showing 3 McAllister instances cash in then out within 2 days](screenshots/05_withdrawal_after_deposit.png)
+
+---
 
 **An account that sat dormant for months then suddenly became active**
+
 The system identifies accounts with no transactions for 90 or more days
 that then receive deposits in the current month.
-See: `01_combined_alert_dashboard.png` — Robert Kline dormant 195 days then $15,000
-cash deposit, HIGH ALERT.
+
+![Combined alert dashboard showing Robert Kline dormant 195 days then $15,000 cash deposit HIGH ALERT](screenshots/01_combined_alert_dashboard.png)
+
+---
 
 **Transactions connected to countries flagged as high risk**
+
 The system checks all wire transfers against a list of FATF high-risk
 country codes and flags any match with a recommended action.
-See: `06_geographic_risk_detection.png` — McAllister wire to Tulips United B.V. via ABN AMRO,
-country NL, flagged with instruction to check OFAC SDN list.
+
+![Geographic risk detection showing McAllister wire to Netherlands entity flagged with OFAC check recommended](screenshots/06_geographic_risk_detection.png)
+
+---
 
 When multiple patterns fire on the same account at the same time,
 the system combines them into a single risk score and surfaces that
@@ -116,13 +141,9 @@ or file a Suspicious Activity Report with FinCEN.
 Every action taken is logged with a timestamp. The full history of every
 case is preserved. Nothing disappears.
 
-See: `10_case_audit_trail.png` — complete audit trail for CASE-2025-001,
-every action from alert assignment through SAR filing with analyst name
-and timestamp on each row.
+![Complete audit trail showing every action on CASE-2025-001 from alert assignment through SAR filing](screenshots/10_case_audit_trail.png)
 
-See: `09_sar_filing_disposition.png` — CASE-2025-001 closed with SAR filed with
-FinCEN, income gap of $1,256,000 documented, supervisor J. Williams
-approval on record.
+![SAR filing disposition showing CASE-2025-001 income gap $1,256,000 SAR filed with FinCEN supervisor approved](screenshots/09_sar_filing_disposition.png)
 
 ---
 
@@ -157,24 +178,91 @@ If you see that, everything is working correctly.
 
 ---
 
-## Screenshots — Actual System Output
+## All Screenshots
 
-All screenshots below are unedited output from running this system.
+All screenshots are unedited output from running this system.
 
-| File | What It Shows |
-|---|---|
-| `01_combined_alert_dashboard.png` | The full combined alert dashboard — all 12 accounts, risk scores, and flags. McAllister HIGH ALERT score 9. Kline HIGH ALERT dormant activation. All others normal. |
-| `02_velocity_zscore_detection.png` | Main monthly flag query — z-scores and alert levels. McAllister z-score 316.97. |
-| `03_structuring_detection.png` | Structuring detection — McAllister 4 deposits in zone, HIGH ALERT at top. Restaurant accounts show single WATCH deposits. |
-| `04_multi_branch_detection.png` | Multi-branch detection — McAllister used 3 branches in one month, 4 deposits, $38,950 flagged. |
-| `05_withdrawal_after_deposit.png` | Withdrawal after deposit — 3 McAllister instances, cash in then out within 2 days. |
-| `06_geographic_risk_detection.png` | Geographic risk — wire to Netherlands entity flagged, OFAC check recommended. |
-| `07_alert_queue_sla_tracking.png` | Alert queue with SLA countdown — both open alerts ON TRACK, assigned to P. Adkins-Smith. |
-| `08_case_status_dashboard.png` | Case dashboard — CASE-2025-001 pending SAR, CASE-2025-002 open, both assigned to P. Adkins-Smith. |
-| `09_sar_filing_disposition.png` | SAR filing output — CASE-2025-001, income gap $1,256,000, SAR filed with FinCEN, supervisor approved. |
-| `10_case_audit_trail.png` | Complete audit trail — every action on CASE-2025-001 from alert through SAR filing with timestamps. |
-| `11_velocity_change_detection.png` | Velocity change — month over month for all accounts, confirms normal accounts do not trigger false flags. |
-| `12_moving_average_trend.png` | Moving average trend — 3-month and 6-month smoothed baselines per account. |
+**01 — Combined Alert Dashboard**
+All 12 accounts with risk scores and flags. McAllister HIGH ALERT score 9. Kline HIGH ALERT dormant activation. All others NORMAL or WATCH.
+
+![Combined alert dashboard](screenshots/01_combined_alert_dashboard.png)
+
+---
+
+**02 — Velocity Z-Score Detection**
+Current month deposits compared to the 12-month baseline. McAllister z-score 316.97.
+
+![Velocity z-score detection](screenshots/02_velocity_zscore_detection.png)
+
+---
+
+**03 — Structuring Detection**
+McAllister 4 deposits in the structuring zone, HIGH ALERT. Restaurant accounts show single WATCH deposits.
+
+![Structuring detection](screenshots/03_structuring_detection.png)
+
+---
+
+**04 — Multi-Branch Detection**
+McAllister used Airport Road Branch, Main Street Branch, and Riverside Branch all in one month.
+
+![Multi-branch detection](screenshots/04_multi_branch_detection.png)
+
+---
+
+**05 — Withdrawal After Deposit**
+Three instances of cash deposited then withdrawn within 2 days on the McAllister account.
+
+![Withdrawal after deposit](screenshots/05_withdrawal_after_deposit.png)
+
+---
+
+**06 — Geographic Risk Detection**
+Wire to Netherlands entity flagged with recommendation to verify business purpose and check OFAC SDN list.
+
+![Geographic risk detection](screenshots/06_geographic_risk_detection.png)
+
+---
+
+**07 — Alert Queue With SLA Tracking**
+Both open alerts assigned to P. Adkins-Smith with days remaining before deadline.
+
+![Alert queue with SLA tracking](screenshots/07_alert_queue_sla_tracking.png)
+
+---
+
+**08 — Case Status Dashboard**
+CASE-2025-001 pending SAR, CASE-2025-002 open. Supervisor view of all open work.
+
+![Case status dashboard](screenshots/08_case_status_dashboard.png)
+
+---
+
+**09 — SAR Filing Disposition**
+CASE-2025-001 closed. Income gap of $1,256,000 documented. SAR filed with FinCEN. Approved by J. Williams.
+
+![SAR filing disposition](screenshots/09_sar_filing_disposition.png)
+
+---
+
+**10 — Complete Case Audit Trail**
+Every action on CASE-2025-001 from alert assignment through SAR filing, timestamped and logged.
+
+![Complete case audit trail](screenshots/10_case_audit_trail.png)
+
+---
+
+**11 — Velocity Change Detection**
+Month over month change for all accounts. Confirms normal accounts do not trigger false alerts.
+
+![Velocity change detection](screenshots/11_velocity_change_detection.png)
+
+---
+
+**12 — Moving Average Trend**
+Three-month and six-month smoothed baselines per account showing underlying deposit trends.
+
+![Moving average trend](screenshots/12_moving_average_trend.png)
 
 ---
 
