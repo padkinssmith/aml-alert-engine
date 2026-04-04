@@ -10,18 +10,29 @@ Financial Services Analyst | Transitioning into AML and Financial Crimes Analysi
 
 ## Background
 
-I have fifteen years of experience as an analyst and five years working
-directly in financial services at E*TRADE, Morgan Stanley, and Osaic —
-all regulated broker-dealers and investment platforms with active AML
+Twenty years as an analyst. Six years in financial services at E*TRADE,
+Morgan Stanley, and Osaic — all regulated institutions with active AML
 compliance programs.
 
-My investigative experience is real. At Red Ventures I identified a
-coordinated internal fraud scheme involving 19 individuals — time theft
-and commission fraud — escalated it through the appropriate channels,
-and the investigation resulted in terminations. At Osaic, one of the
-largest independent RIA networks in the US supporting over 10,000
-advisors, I handle compliance-adjacent advisor support and flag activity
-requiring further review.
+My investigative work is real and documented across my career.
+
+At Comcast I spent years in real-time analysis and forecasting — identifying
+data anomalies and control gaps, building automated validation checks,
+maintaining audit-ready documentation supporting internal compliance reviews,
+and managing a database tracking errors across billing and sales activity.
+That work required the same pattern recognition, anomaly detection, and
+structured documentation that AML investigation demands.
+
+At Red Ventures I identified a coordinated internal fraud scheme involving
+19 individuals — time theft and commission fraud — while conducting
+performance monitoring. I escalated it through the appropriate channels
+and the investigation resulted in terminations. That is not a course.
+That is not a portfolio project. That happened.
+
+At E*TRADE, Morgan Stanley, and Osaic I worked directly inside regulated
+financial institutions supporting compliance-adjacent workflows, flagging
+activity requiring further review, and escalating through established
+compliance channels.
 
 I am now transitioning into AML and financial crimes analysis. I built
 this project because I wanted to understand how transaction monitoring
@@ -39,16 +50,51 @@ When something looks wrong it scores the account, generates an alert,
 and tracks that alert through the full investigation process — from
 the first flag all the way through to the final decision.
 
-It covers the patterns analysts encounter most often in a cash
-monitoring queue:
+Each pattern below is a real detection method built into this system.
+The screenshot listed next to each one is actual output from running it.
 
-- A customer whose deposits suddenly spike far above their own history
-- A business depositing far more cash than any similar business in the area
-- Deposits made just under the $10,000 reporting limit, month after month
-- The same account using different bank branches to make deposits
-- Cash deposited then quickly withdrawn a few days later
-- An account that sat dormant for months then suddenly became active
-- Transactions connected to countries flagged as high risk
+**A customer whose deposits suddenly spike far above their own history**
+The system calculates a z-score comparing this month's deposits to the
+prior 12-month average. A score above 3.0 triggers a HIGH ALERT.
+See: `02_velocity_zscore_detection.png` — McAllister z-score 316.97, HIGH ALERT.
+
+**A business depositing far more than any similar business in the area**
+The system compares each account to all other accounts of the same
+business type. A flower shop is compared to flower shops, not
+restaurants. This catches accounts that are always high, not just
+accounts that spike.
+See: `01_combined_alert_dashboard.png` — peer_z column shows each account's position
+relative to its business type group.
+
+**Deposits made just under the $10,000 reporting limit, month after month**
+The system counts deposits in the $8,000 to $9,999 zone. Three or more
+in a single month is a HIGH ALERT. The same pattern is also checked
+within any rolling 7-day window to catch aggressive structuring.
+See: `03_structuring_detection.png` — McAllister 4 deposits in zone, HIGH ALERT.
+
+**The same account using different bank branches to make deposits**
+The system counts how many distinct branches an account used in a single
+month. Using two or more is a documented structuring method.
+See: `04_multi_branch_detection.png` — McAllister used Airport Road Branch, Main
+Street Branch, and Riverside Branch all in the same month.
+
+**Cash deposited then quickly withdrawn a few days later**
+The system finds any deposit of $5,000 or more followed by a withdrawal
+of at least 50% of that amount within 5 days. This is a layering pattern.
+See: `05_withdrawal_after_deposit.png` — three McAllister instances flagged, including
+$9,800 deposited and $8,500 withdrawn two days later.
+
+**An account that sat dormant for months then suddenly became active**
+The system identifies accounts with no transactions for 90 or more days
+that then receive deposits in the current month.
+See: `01_combined_alert_dashboard.png` — Robert Kline dormant 195 days then $15,000
+cash deposit, HIGH ALERT.
+
+**Transactions connected to countries flagged as high risk**
+The system checks all wire transfers against a list of FATF high-risk
+country codes and flags any match with a recommended action.
+See: `06_geographic_risk_detection.png` — McAllister wire to Tulips United B.V. via ABN AMRO,
+country NL, flagged with instruction to check OFAC SDN list.
 
 When multiple patterns fire on the same account at the same time,
 the system combines them into a single risk score and surfaces that
@@ -70,90 +116,65 @@ or file a Suspicious Activity Report with FinCEN.
 Every action taken is logged with a timestamp. The full history of every
 case is preserved. Nothing disappears.
 
----
+See: `10_case_audit_trail.png` — complete audit trail for CASE-2025-001,
+every action from alert assignment through SAR filing with analyst name
+and timestamp on each row.
 
-## Sample Output
-
-The screenshots below are actual output from running this system.
-No mock-ups. No editing.
-
-**Combined Alert Dashboard — McAllister surfaces as HIGH ALERT**
-
-The system correctly identified Tom McAllister with a risk score of 9,
-firing on velocity, structuring, multi-branch deposits, withdrawal after
-deposit, and geographic risk simultaneously.
-
-![Alert Dashboard](screenshots/alert_tier.png)
-
-**Multi-Branch Detection**
-
-Four deposits spread across three different branches in a single month —
-Airport Road Branch, Main Street Branch, and Riverside Branch.
-
-![Multi-Branch](screenshots/branch_flag.png)
-
-**Geographic Risk**
-
-Wire transfer to Tulips United B.V. via ABN AMRO flagged for high-risk
-jurisdiction with a recommended action to verify business purpose and
-check the OFAC SDN list.
-
-![Geographic Risk](screenshots/geo_flag.png)
-
-**Withdrawal After Deposit**
-
-Cash deposited then withdrawn within two days flagged as a layering
-indicator. Three instances detected on the McAllister account.
-
-![Withdrawal After Deposit](screenshots/withdrawal_pct.png)
-
-**Structuring Detection**
-
-McAllister's four current-month deposits all fall in the $8,000 to
-$9,999 structuring zone, triggering a HIGH ALERT.
-
-![Structuring](screenshots/structuring_flag.png)
-
-**SAR Filing — Disposition Summary**
-
-CASE-2025-001 closed with a SAR filed with FinCEN. Income gap of
-$1,256,000 documented. Supervised approved by J. Williams.
-
-![SAR Filing](screenshots/outcome_description.png)
-
-**Full Case Timeline — Audit Trail**
-
-Complete chronological record of every action taken on the case,
-from alert assignment through SAR filing.
-
-![Case Timeline](screenshots/full_case_timeline.png)
+See: `09_sar_filing_disposition.png` — CASE-2025-001 closed with SAR filed with
+FinCEN, income gap of $1,256,000 documented, supervisor J. Williams
+approval on record.
 
 ---
 
-## What This Says About Me as a Candidate
+## How to Run It
 
-Building this system meant answering real questions. Why is the
-structuring detection zone set at $8,000 and not $9,000? Why does
-comparing an account to similar businesses catch things that comparing
-it to its own history misses? Why does the audit log need a seven-year
-retention period and what regulation requires it?
+**What you need:** PostgreSQL 13 or higher installed on your machine
+or a server.
 
-Every one of those decisions is documented in the code with its
-regulatory basis.
+**What it does when you run it:** It sets up the database, loads sample
+accounts with suspicious patterns already built in, runs all 13 detection
+methods, produces the combined alert queue, and then runs the full case
+lifecycle layer showing investigations, dispositions, and audit logs.
+The whole thing runs in sequence automatically.
 
-I bring fifteen years of analytical experience, five years inside
-regulated financial institutions, and real fraud investigation work
-to this transition. This project is the technical foundation I built
-on top of that.
+**The one command that does everything:**
+
+```bash
+sudo -u postgres createdb aml_alert_engine
+sudo -u postgres psql -d aml_alert_engine -f run_all.sql
+```
+
+**What to look for in the output:**
+
+When the detection engine runs you will see each of the 13 methods
+print results to the screen in sequence. When the alert dashboard runs
+you will see one row per account sorted by risk score. Tom McAllister
+should appear at the top with HIGH ALERT and a risk score of 9.
+Robert Kline should appear second with HIGH ALERT from dormant
+activation. All other accounts should show NORMAL or WATCH.
+
+If you see that, everything is working correctly.
 
 ---
 
-## For Technical Reviewers
+## Screenshots — Actual System Output
 
-The SQL files contain the full detection logic, sample data with
-suspicious patterns built in, and the complete case lifecycle layer.
-Every query is commented in plain English explaining what it does
-and why.
+All screenshots below are unedited output from running this system.
+
+| File | What It Shows |
+|---|---|
+| `01_combined_alert_dashboard.png` | The full combined alert dashboard — all 12 accounts, risk scores, and flags. McAllister HIGH ALERT score 9. Kline HIGH ALERT dormant activation. All others normal. |
+| `02_velocity_zscore_detection.png` | Main monthly flag query — z-scores and alert levels. McAllister z-score 316.97. |
+| `03_structuring_detection.png` | Structuring detection — McAllister 4 deposits in zone, HIGH ALERT at top. Restaurant accounts show single WATCH deposits. |
+| `04_multi_branch_detection.png` | Multi-branch detection — McAllister used 3 branches in one month, 4 deposits, $38,950 flagged. |
+| `05_withdrawal_after_deposit.png` | Withdrawal after deposit — 3 McAllister instances, cash in then out within 2 days. |
+| `06_geographic_risk_detection.png` | Geographic risk — wire to Netherlands entity flagged, OFAC check recommended. |
+| `07_alert_queue_sla_tracking.png` | Alert queue with SLA countdown — both open alerts ON TRACK, assigned to P. Adkins-Smith. |
+| `08_case_status_dashboard.png` | Case dashboard — CASE-2025-001 pending SAR, CASE-2025-002 open, both assigned to P. Adkins-Smith. |
+| `09_sar_filing_disposition.png` | SAR filing output — CASE-2025-001, income gap $1,256,000, SAR filed with FinCEN, supervisor approved. |
+| `10_case_audit_trail.png` | Complete audit trail — every action on CASE-2025-001 from alert through SAR filing with timestamps. |
+| `11_velocity_change_detection.png` | Velocity change — month over month for all accounts, confirms normal accounts do not trigger false flags. |
+| `12_moving_average_trend.png` | Moving average trend — 3-month and 6-month smoothed baselines per account. |
 
 ---
 
@@ -171,14 +192,23 @@ screenshots/             — actual output from running the system
 
 ---
 
-## Running It
+## What This Says About Me as a Candidate
 
-Requires PostgreSQL 13 or higher.
+Building this system meant making decisions that required real
+understanding. Why is the structuring detection zone set at $8,000
+and not $9,000? Why does comparing an account to similar businesses
+catch things that comparing it to its own history misses? Why does the
+audit log need a seven-year retention period and what regulation
+requires it?
 
-```bash
-sudo -u postgres createdb aml_alert_engine
-sudo -u postgres psql -d aml_alert_engine -f run_all.sql
-```
+Every one of those decisions is documented in the code with its
+regulatory basis.
+
+I bring twenty years of analytical experience, six years inside
+regulated financial institutions, real fraud investigation work, and
+the pattern recognition skills built across a career of identifying
+anomalies before they become problems. This project is the technical
+foundation I built on top of that.
 
 ---
 
@@ -186,7 +216,8 @@ sudo -u postgres psql -d aml_alert_engine -f run_all.sql
 
 **Pam Adkins-Smith**
 Financial Services Analyst | Transitioning into AML and Financial Crimes Analysis
-15 years analytical experience | 5 years financial services | E*TRADE | Morgan Stanley | Osaic
+20 years analytical experience | 6 years financial services
+E*TRADE | Morgan Stanley | Osaic
 
 [LinkedIn](https://linkedin.com/in/pam-adkins-smith) |
 [GitHub](https://github.com/padkinssmith)
