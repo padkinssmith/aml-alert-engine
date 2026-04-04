@@ -1,27 +1,33 @@
 # AML Alert Engine
 
-**Pam Adkins-Smith** — Financial Services Analyst transitioning into AML
-and Financial Crimes Analysis
+**Pam Adkins-Smith**
+Financial Services Analyst | Transitioning into AML and Financial Crimes Analysis
 
-[LinkedIn](https://linkedin.com/in/pamadkinssmith) |
+[LinkedIn](https://linkedin.com/in/pam-adkins-smith) |
 [GitHub](https://github.com/padkinssmith)
 
 ---
 
-## Why I Built This
+## Background
 
-I have twenty years of experience as an analyst and six years working
-directly in financial services. I am now studying AML seriously and
-targeting financial crimes analyst roles.
+I have fifteen years of experience as an analyst and five years working
+directly in financial services at E*TRADE, Morgan Stanley, and Osaic —
+all regulated broker-dealers and investment platforms with active AML
+compliance programs.
 
-I built this project because I wanted to understand how transaction
-monitoring actually works before sitting down to use it on the job.
+My investigative experience is real. At Red Ventures I identified a
+coordinated internal fraud scheme involving 19 individuals — time theft
+and commission fraud — escalated it through the appropriate channels,
+and the investigation resulted in terminations. At Osaic, one of the
+largest independent RIA networks in the US supporting over 10,000
+advisors, I handle compliance-adjacent advisor support and flag activity
+requiring further review.
 
-So I built the detection logic from scratch in SQL. Every method in
-this system mirrors what enterprise transaction monitoring platforms
-do under the hood. Building it taught me not just what the alerts are,
-but why they exist, what regulation requires them, and what an analyst
-should be looking for when one fires.
+I am now transitioning into AML and financial crimes analysis. I built
+this project because I wanted to understand how transaction monitoring
+actually works before sitting down to use it on the job — not just what
+the alerts mean, but why they fire, what regulation requires them, and
+what an analyst should be looking for when one does.
 
 ---
 
@@ -66,20 +72,79 @@ case is preserved. Nothing disappears.
 
 ---
 
+## Sample Output
+
+The screenshots below are actual output from running this system.
+No mock-ups. No editing.
+
+**Combined Alert Dashboard — McAllister surfaces as HIGH ALERT**
+
+The system correctly identified Tom McAllister with a risk score of 9,
+firing on velocity, structuring, multi-branch deposits, withdrawal after
+deposit, and geographic risk simultaneously.
+
+![Alert Dashboard](screenshots/alert_tier.png)
+
+**Multi-Branch Detection**
+
+Four deposits spread across three different branches in a single month —
+Airport Road Branch, Main Street Branch, and Riverside Branch.
+
+![Multi-Branch](screenshots/branch_flag.png)
+
+**Geographic Risk**
+
+Wire transfer to Tulips United B.V. via ABN AMRO flagged for high-risk
+jurisdiction with a recommended action to verify business purpose and
+check the OFAC SDN list.
+
+![Geographic Risk](screenshots/geo_flag.png)
+
+**Withdrawal After Deposit**
+
+Cash deposited then withdrawn within two days flagged as a layering
+indicator. Three instances detected on the McAllister account.
+
+![Withdrawal After Deposit](screenshots/withdrawal_pct.png)
+
+**Structuring Detection**
+
+McAllister's four current-month deposits all fall in the $8,000 to
+$9,999 structuring zone, triggering a HIGH ALERT.
+
+![Structuring](screenshots/structuring_flag.png)
+
+**SAR Filing — Disposition Summary**
+
+CASE-2025-001 closed with a SAR filed with FinCEN. Income gap of
+$1,256,000 documented. Supervised approved by J. Williams.
+
+![SAR Filing](screenshots/outcome_description.png)
+
+**Full Case Timeline — Audit Trail**
+
+Complete chronological record of every action taken on the case,
+from alert assignment through SAR filing.
+
+![Case Timeline](screenshots/full_case_timeline.png)
+
+---
+
 ## What This Says About Me as a Candidate
 
-Building this system meant making decisions that required real
-understanding. Why is the structuring detection zone set at $8,000
-and not $9,000? Why does comparing an account to similar businesses
-catch things that comparing it to its own history misses? Why does the
-case audit log need a seven-year retention period?
+Building this system meant answering real questions. Why is the
+structuring detection zone set at $8,000 and not $9,000? Why does
+comparing an account to similar businesses catch things that comparing
+it to its own history misses? Why does the audit log need a seven-year
+retention period and what regulation requires it?
 
 Every one of those decisions is documented in the code with its
-regulatory basis. Answering those questions is what the study behind
-this project produced.
+regulatory basis.
 
-My goal was to arrive prepared rather than spend the first months on
-the job learning what I could have learned before I started.
+I bring fifteen years of analytical experience, five years inside
+regulated financial institutions, and real fraud investigation work
+to this transition. This project is the technical foundation I built
+on top of that.
 
 ---
 
@@ -101,21 +166,8 @@ run_all.sql              — runs the entire system in one command
 03_detection_engine.sql  — 13 detection methods
 04_alert_dashboard.sql   — combined alert queue output
 05_case_lifecycle.sql    — alert tracking, cases, and dispositions
+screenshots/             — actual output from running the system
 ```
-
----
-
-## Author
-
-**Pam Adkins-Smith**
-Financial Services Analyst | Transitioning into AML and Financial Crimes Analysis
-20 years analytical experience | 6 years financial services
-
-[LinkedIn](https://linkedin.com/in/pamadkinssmith) |
-[GitHub](https://github.com/padkinssmith)
-
-Open to AML Analyst, BSA Analyst, Financial Crimes Analyst, and
-Compliance Analyst roles. Remote preferred.
 
 ---
 
@@ -124,6 +176,20 @@ Compliance Analyst roles. Remote preferred.
 Requires PostgreSQL 13 or higher.
 
 ```bash
-sudo -u postgres createdb aml_monitoring
-sudo -u postgres psql -d aml_monitoring -f run_all.sql
+sudo -u postgres createdb aml_alert_engine
+sudo -u postgres psql -d aml_alert_engine -f run_all.sql
 ```
+
+---
+
+## Author
+
+**Pam Adkins-Smith**
+Financial Services Analyst | Transitioning into AML and Financial Crimes Analysis
+15 years analytical experience | 5 years financial services | E*TRADE | Morgan Stanley | Osaic
+
+[LinkedIn](https://linkedin.com/in/pam-adkins-smith) |
+[GitHub](https://github.com/padkinssmith)
+
+Open to AML Analyst, BSA Analyst, Financial Crimes Analyst, and
+Compliance Analyst roles. Remote preferred.
