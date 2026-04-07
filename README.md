@@ -3,7 +3,7 @@
 **Pam Adkins-Smith**  
 Financial Services Analyst | Transitioning into AML and Financial Crimes Analysis
 
-[LinkedIn](https://www.linkedin.com/in/pamadkinssmith) | [GitHub](https://github.com/padkinssmith/aml-alert-engine)
+[LinkedIn](https://www.linkedin.com/in/pam-adkins-smith) | [GitHub](https://github.com/padkinssmith/aml-alert-engine)
 
 -----
 
