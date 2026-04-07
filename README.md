@@ -327,7 +327,7 @@ Financial Services Analyst | Transitioning into AML and Financial Crimes Analysi
 20 years analytical experience | 6 years financial services  
 E*TRADE | Morgan Stanley | Osaic
 
-[LinkedIn](https://www.linkedin.com/in/pamadkinssmith) | [GitHub](https://github.com/padkinssmith/aml-alert-engine)
+[LinkedIn](https://www.linkedin.com/in/pam-adkins-smith) | [GitHub](https://github.com/padkinssmith/aml-alert-engine)
 
 Open to AML Analyst, BSA Analyst, Financial Crimes Analyst, and
 Compliance Analyst roles. Remote preferred.
