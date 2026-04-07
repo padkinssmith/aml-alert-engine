@@ -19,7 +19,7 @@ monitoring works before I use it on the job. Not just what alerts mean —
 but why they fire and what an analyst should do when one lands in their
 queue.
 
-Full work history: [LinkedIn](https://www.linkedin.com/in/pamadkinssmith)
+Full work history: [LinkedIn](https://www.linkedin.com/in/pam-adkins-smith)
 
 -----
 
